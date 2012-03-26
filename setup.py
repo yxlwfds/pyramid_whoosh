@@ -1,6 +1,7 @@
 import os
 
 from setuptools import setup, find_packages
+import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
@@ -37,7 +38,7 @@ setup(name='pyramid_whoosh',
       test_suite="pyramid_whoosh",
       entry_points = """\
       [console_scripts]
-      pwhoosh = pyramid_celery.commands.celeryd:main
+      pwhoosh = pyramid_whoosh.commands.pwhoosh:main
       """,
       )
 
