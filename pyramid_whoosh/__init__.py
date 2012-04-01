@@ -1,6 +1,7 @@
 import os
 from whoosh import index
 from zope.interface.interface import Interface
+from whoosh.index import EmptyIndexError
 from pyramid_whoosh.interfaces import IDocumentSchema
 
 _PREFIX="whoosh"
@@ -9,7 +10,7 @@ class IWhooshEnvironment(Interface):
     pass
 
 def add_schema(config,schema):
-    config.registy.registerUtility(schema, IDocumentSchema)
+    config.registry.registerUtility(schema, IDocumentSchema)
 
 def get_whoosh_env(config):
     return config.registry.getUtility(IWhooshEnvironment)
@@ -37,4 +38,8 @@ def includeme(config):
 
 def add_whoosh_indexer(event):
     env = event.request.registry.getUtility(IWhooshEnvironment)
-    event.request.whoosh_ix =  index.open_dir(env['index_dir'])
+    try:
+        event.request.whoosh_ix =  index.open_dir(env['index_dir'])
+    except EmptyIndexError as e:
+           raise EmptyIndexError("%s, run the pwhoosh command to build the index" % e.message )
+        
